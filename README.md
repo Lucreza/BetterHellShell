@@ -44,6 +44,10 @@ Then you can run BetterHellShell as follow:
 
 [!] When compiling your resulted c code, if using AES encryption, make sure that it contains `aes.h` and `aes.c` in your project. You can use the Execute folder-project for ease of compiling.
 
+## Demo
+
+![Demo](https://github.com/user-attachments/assets/a3fedc33-047e-4e80-9abd-b353bd684c39)
+
 ## Credits
  - This project is a modified version of HellShell by @NUL0x4C and @mrd0x
  - It also uses AES implementation from [tiny-aes-c](https://github.com/kokke/tiny-AES-c)
