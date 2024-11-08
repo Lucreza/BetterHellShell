@@ -2,7 +2,7 @@
 
 ## Description
 
-**BetterHellShell** is a payload encryption and obfuscation tool designed for obfuscating and encrypting shellcode or payloads.
+**BetterHellShell** is a payload encryption and obfuscation tool designed for obfuscating and encrypting payloads in raw format.
 
 This tool reads a payload from a file specified by the user, applies the selected encryption method (e.g., XOR, AES, RC4), and then obfuscates the payload using a chosen obfuscation method (MAC address, IPv4 address, UUID). If the payload is not already aligned with the required size, it will be padded to the nearest multiple required for obfuscation.
 
